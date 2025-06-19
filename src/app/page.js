@@ -1,103 +1,220 @@
-import Image from "next/image";
+'use client';
+import Image from 'next/image';
+import MusicToggle from '@/components/MusicToggle';
+import ThemeToggle from '@/components/ThemeToggle';
+import IconNav from '@/components/IconNav';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import DraggableStars from '@/components/DraggableStars'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [view, setView] = useState('overview');
+  const viewStates = ['overview', 'skills-soft', 'skills-hard'];
+  const [flipped, setFlipped] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  const isDark = theme === 'dark'
+
+  const bg = theme === 'dark'
+    ? '/dark-mode/dark-bg.png'
+    : '/light-mode/light-bg.png';
+
+  const card = theme === 'dark'
+    ? '/dark-mode/dark-main-card.png'
+    : '/light-mode/light-main-card.png';
+
+  const avatarFront = theme === 'dark'
+    ? '/dark-mode/dark-avatar.png'
+    : '/light-mode/light-avatar.png';
+
+  const avatarBack = theme === 'dark'
+  ? '/dark-mode/dark-pfp.png'
+  : '/light-mode/light-pfp.png';
+
+  const arrowLeft = theme === 'dark'
+  ? '/dark-mode/dark-arrow-left.png'
+  : '/light-mode/light-arrow-left.png';
+
+  const arrowRight = theme === 'dark'
+    ? '/dark-mode/dark-arrow-right.png'
+    : '/light-mode/light-arrow-right.png';
+
+  const toggleLeft = () => {
+    const currentIndex = viewStates.indexOf(view);
+    const newIndex = (currentIndex - 1 + viewStates.length) % viewStates.length;
+    setView(viewStates[newIndex]);
+  };
+
+  const toggleRight = () => {
+    const currentIndex = viewStates.indexOf(view);
+    const newIndex = (currentIndex + 1) % viewStates.length;
+    setView(viewStates[newIndex]);
+  };
+
+  const renderContent = () => {
+    switch (view) {
+      case 'overview':
+        return (
+          <div className="text-black">
+            <h1 className="text-2xl font-bold">Haii, I am Mochii (˶˃ ᵕ ˂˶) .ᐟ.ᐟ 💗</h1>
+            <p className="mt-2 leading-relaxed text-xl max-w-[90%] text-gray-700">
+              With over a decade as a full-time scholar and a gal of <br /> leadership,
+              I&apos;ve built a strong foundation in discipline, <br /> strategy, and
+              excellence. Now, I&apos;m channeling that <br /> experience toward my goal
+              of becoming an impactful <br /> woman in the world of tech and gaming.
+            </p>
+          </div>
+        );
+
+      case 'skills-soft':
+        return (
+          <div className="text-black">
+            <h2 className="text-2xl font-bold">✨ Soft Skills ✨</h2>
+            <ul className="list-disc pl-4 mt-1 text-lg text-gray-700">
+              <li>
+                Transformational and Participative Leadership Styles,
+                Event/ <br /> Digital Product Marketing (Hosting, Pitching, Negotiation), <br />
+                Analytical Skills (Integration of Theoretical processes for
+                <br /> Analysis and Decision-making), Intrapersonal Discipline <br /> &
+                Self-Management (Consistently balanced freelance work and <br />
+                leadership roles with academics, delivering projects under <br />
+                pressure and quickly adapting to new tech stacks.)
+              </li>
+            </ul>
+          </div>
+        );
+
+      case 'skills-hard':
+        return (
+          <div className="text-black">
+            <h2 className="text-2xl font-semibold">✨ Hard Skills ✨</h2>
+            <ul className="list-disc pl-4 mt-2 text-lg text-gray-700">
+              <li>
+              <b>Languages & Technologies:</b>
+              HTML, CSS, JavaScript, Python, <br /> PHP, C++, SQL
+              <br />
+              <b>Frameworks & Libraries:</b>
+                React.js, Next.js, Django, Express,<br /> Prisma,
+                Flutter, REST, OpenGL<br />
+              <b>Tools & Platforms: </b>
+                Git, Firebase, Google Cloud Platform (GCP), <br />
+                Azure DevOps, Jira, Trello, Google Workspace, Canva, <br />
+                AI tools (ChatGPT, Claude)
+              </li>
+            </ul>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+
+  return (
+    <main className="relative min-h-screen overflow-hidden">
+      {/* Gradient animation overlay */}
+      <div className="gradient-overlay" />
+
+      {/* Fading background image */}
+      <motion.div
+        key={theme}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 1.2 }}
+        className="absolute inset-0 bg-cover bg-center z-0"
+        style={{ backgroundImage: `url('${bg}')` }}
+      />
+      {/* Top Left: Music + Theme */}
+      <div className="absolute top-4 left-4 z-50 flex gap-3">
+        <MusicToggle />
+        <ThemeToggle />
+      </div>
+
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-30">
+    {/* allow stars to overflow and drag */}
+    <DraggableStars />
+  </div>
+
+      {/* Card Layout */}
+      <div className="flex justify-center items-center h-screen relative z-10">
+        <motion.div
+          key={theme}
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          className="relative w-[1300px] h-[700px]"
+        >
+          <Image
+            src={card}
+            alt="Main Card"
+            fill
+            className="object-contain"
+            priority
+          />
+
+      {/* Arrow Left (outside left of card) */}
+      <div className="absolute left-[150px] top-1/2 transform -translate-y-1/2 z-20 cursor-pointer hover:scale-110 transition">
+        <Image src={arrowLeft} alt="Previous" width={80} height={80} onClick={toggleLeft} />
+      </div>
+
+      {/* Arrow Right (outside right of card) */}
+      <div className="absolute right-[100px] top-1/2 transform -translate-y-1/2 z-20 cursor-pointer hover:scale-110 transition">
+        <Image src={arrowRight} alt="Next" width={80} height={80} onClick={toggleRight} />
+      </div>
+
+        <div className="absolute top-[180px] left-[580px] right-[20px] bottom-[90px] z-10 flex flex-col justify-between">
+          {renderContent()}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+          {/* Avatar + IconNav */}
+          <div className="absolute top-[180px] left-[350px] z-10">
+          <div className="relative w-[210px] h-[210px] perspective" onClick={() => setFlipped(prev => !prev)} >
+              <div className={`transition-transform duration-700 transform-style-preserve-3d w-full h-full ${flipped ? 'rotate-y-180' : ''}`}>
+                {/* Front Face */}
+                <div className="absolute w-full h-full backface-hidden">
+                  <Image
+                    src={avatarFront}
+                    alt="Avatar Front"
+                    width={210}
+                    height={210}
+                    className="rounded-full  shadow-2xl object-cover"
+                  />
+                </div>
+
+                {/* Back Face */}
+                <div className="absolute w-full h-full rotate-y-180 backface-hidden">
+                  <Image
+                    src={avatarBack}
+                    alt="Avatar Back"
+                    width={210}
+                    height={210}
+                    className="rounded-full  shadow-2xl object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 pr-4">
+              <IconNav />
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Footer */}
+      <footer className="absolute bottom-4 w-full text-center text-white text-s italic z-20 bg-black/10 backdrop-blur-sm py-2">
+        ⋆౨ৎ˚⟡˖ ࣪ @mochiicakes | Made with imagination, logic & love | 2025 ࣪  ˖⟡˚౨ৎ⋆
       </footer>
-    </div>
+    </main>
   );
 }
