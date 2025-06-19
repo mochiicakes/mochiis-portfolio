@@ -15,7 +15,6 @@ export default function MusicToggle() {
     setMounted(true);
   }, []);
 
-  // Update audio source when theme changes
   useEffect(() => {
     if (!mounted || !audioRef.current) return;
 
@@ -28,10 +27,14 @@ export default function MusicToggle() {
       fadeOut(() => {
         audioRef.current.src = newSrc;
         audioRef.current.volume = 0;
-        audioRef.current.play().then(() => {
-          setCurrentSrc(newSrc);
-          fadeIn();
-        });
+        if (isPlaying) {
+          audioRef.current.play().then(() => {
+            setCurrentSrc(newSrc);
+            fadeIn();
+          });
+        } else {
+          setCurrentSrc(newSrc); // still update src but do not play
+        }
       });
     }
   }, [theme]);
