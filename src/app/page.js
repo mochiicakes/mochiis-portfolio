@@ -200,8 +200,8 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-6 pr-4">
-              <IconNav />
+            <div className="mt-6 flex justify-center w-full">
+            <IconNav />
             </div>
           </div>
         </motion.div>
